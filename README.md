@@ -1,6 +1,7 @@
 - 👋 Bonjour, je suis @ludolpif. C'est mon pseudo gaming (depuis 2000), twitch (depuis 2020), discord.
 - 👀 Je suis admin système et réseaux et j'aime bien avoir des pet-projects de très petite taille (sinon je ne les fini pas).
-- 📫 Je suis sur les serveurs discord de LittleBigWhale, Cokoooooo (avec 6 o) et Zerator
+- 📫 Je suis sur les serveurs discord de LittleBigWhale, GDocœur (ex InGDoc) et Zerator
+- ☎ Pour rejoindre le discord GDocœur: https://discord.com/invite/NjUZZmrxg9
 
 <!---
 ludolpif/ludolpif is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
