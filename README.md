@@ -1,7 +1,7 @@
 - 👋 Bonjour, je suis @ludolpif. C'est mon pseudo gaming (depuis 2000), twitch (depuis 2020), discord.
 - 👀 Je suis admin système et réseaux et j'aime bien avoir des pet-projects de très petite taille (sinon je ne les fini pas).
 - 📫 Je suis sur les serveurs discord de Commu ZEvent/Place, LittleBigWhale et Zerator
-- ☎ Pour rejoindre le discord inter Commu ZEvent/Place : https://discord.gg/SbqEHZ47
+- ☎ Pour rejoindre le discord inter Commu ZEvent/Place : https://discord.gg/sXe5aVW2jV
 - ⚠ Je ne fais pas partie du staff du ZEvent, je suis un simple viewer qui a écrit des scripts.
 
 <!---
