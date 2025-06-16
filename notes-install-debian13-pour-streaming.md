@@ -307,8 +307,18 @@ root@lud-5490:~# adduser ludolpif dialout
   - Chercher sparkfun
   - Installer SparkFun AVR Boards
 - Menu Outils / Type de Carte / Sparkfun / SparkFun Pro Micro
+- Corriger les chemins pour les outils d'upload du code sur ces board là
+```
+ludolpif@lud-5490:~$ editor ~/.arduino15/packages/SparkFun/hardware/avr/1.1.13/platform.txt
 
+compiler.path=/usr/bin/
 
+# AVR Uploader/Programmers tools
+# ------------------------------
+tools.avrdude.path=/usr/share/arduino/hardware/tools
+tools.avrdude.cmd.path={path}/avrdude
+tools.avrdude.config.path={path}/avrdude.conf
+```
 
 ## Picoscope (non)
 
