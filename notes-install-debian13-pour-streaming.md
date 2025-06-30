@@ -18,12 +18,13 @@
 root@lud-5490:~# apt install lxqt-panel lxqt-core mpv # pour marquer en manuel
 root@lud-5490:~# apt autoremove --purge xsane cups-server-common libreoffice-common thunderbird hexchat meteo-qt synaptic xscreensaver avahi-daemon apparmor bluez gcr gnome-accessibility-themes sudo orca plymouth xorg-docs-core
 # plymouth == splash screen de boot qui masque des détails utiles les jours de panne
+root@lud-5490:~# ln -s /bin/true /usr/local/bin/xdg-screensaver
 root@lud-5490:~# rm -r  /etc/cups /etc/apparmor.d/local
 ```
 
 ## Outils que j'aime avoir sous la main
 ```
-root@lud-5490:~# apt install build-essential chromium curl git gmidimonitor gimp keepassxc oathtool rsync ssh strace uvcdynctrl vim xarchiver
+root@lud-5490:~# apt install build-essential chromium curl git gmidimonitor gimp inotify-tools keepassxc mate-calc oathtool rsync ssh strace uvcdynctrl vim xarchiver
 root@lud-5490:~# sed -i -e 's/^#\?\s*PasswordAuthentication\s\+.*$/PasswordAuthentication no/' /etc/ssh/sshd_config
 root@lud-5490:~# service ssh restart
 ```
@@ -197,8 +198,15 @@ ludolpif@lud-5490:/tmp$ curl https://packages.microsoft.com/keys/microsoft.asc |
 
 root@lud-5490:/tmp# install -o root -g root -m 644 microsoft.gpg /etc/apt/keyrings/microsoft-archive-keyring.gpg
 root@lud-5490:/tmp# echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/microsoft-archive-keyring.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list
-root@lud-5490:/tmp# apt update
-root@lud-5490:/tmp# apt install code
+
+root@lud-5490:~# apt update
+root@lud-5490:~# apt install code
+
+root@lud-5490:~# echo "fs.inotify.max_user_instances = 16384" | tee /etc/sysctl.d/inotify_vscode.conf
+root@lud-5490:~# /usr/lib/systemd/systemd-sysctl
+root@lud-5490:~# cat /proc/sys/fs/inotify/max_user_instances
+16384
+
 
 
 ludolpif@lud-5490:/tmp$ cargo new hello_world
