@@ -45,6 +45,17 @@ DefaultTimeoutStopSec=9s
 DefaultDeviceTimeoutSec=9s
 ```
 
+## Enable SysRq to have manual OOM killer
+
+```
+root@lud-5490:~# echo "kernel.sysrq = 1" | tee /etc/sysctl.d/sysrq.conf
+root@lud-5490:~# /usr/lib/systemd/systemd-sysctl
+root@lud-5490:~# cat /proc/sys/kernel/sysrq
+1
+```
+
+sysrq: HELP : loglevel(0-9) reboot(b) crash(c) terminate-all-tasks(e) memory-full-oom-kill(f) kill-all-tasks(i) thaw-filesystems(j) sak(k) show-backtrace-all-active-cpus(l) show-memory-usage(m) nice-all-RT-tasks(n) poweroff(o) show-registers(p) show-all-timers(q) unraw(r) sync(s) show-task-states(t) unmount(u) force-fb(v) show-blocked-tasks(w) dump-ftrace-buffer(z) replay-kernel-logs(R)
+
 ## Fix brightness keys and 0% luminosity
 
 - Note : `pkexec` est nécessaire pour `/usr/bin/lxqt-config-brightness`, et le paquet liblxqt-backlight-helper semble nécessaire
@@ -191,6 +202,27 @@ ludolpif@lud-5490:~/git/bevy/hello-bevy$ cargo update
 ludolpif@lud-5490:~/git/bevy/hello-bevy$ cargo build
 ```
 
+## Swapfile et zswap pour rust-analyser + laptop trop juste en RAM
+
+
+root@lud-5490:/# dd if=/dev/zero of=/home/swap.img bs=1M count=8k
+8192+0 enregistrements lus
+8192+0 enregistrements écrits
+8589934592 octets (8,6 GB, 8,0 GiB) copiés, 36,4064 s, 236 MB/s
+root@lud-5490:/# mkswap /home/swap.img 
+mkswap: /home/swap.img : droits 0664 non sûrs, corriger avec : chmod 0600 /home/swap.img
+Configure l'espace d'échange (swap) en version 1, taille = 8 GiB (8589930496 octets)
+pas d'étiquette, UUID=add9da34-2c8c-47e6-bfb2-a24c81b69cdf
+root@lud-5490:~# chmod 0600 /home/swap.img
+root@lud-5490:/# echo "/home/swap.img       none            swap    defaults        0       0" | tee -a /etc/fstab 
+root@lud-5490:/# systemctl daemon-reload
+root@lud-5490:/# swapon -a
+root@lud-5490:/# swapon -s
+Nom fichier                             Type            Taille          Utilisé         Priorité
+/home/swap.img                          file            1048572         0               -2
+root@lud-5490:/# 
+
+
 ## VSCode avec rust-analyser
 
 ```
@@ -213,6 +245,29 @@ ludolpif@lud-5490:/tmp$ cargo new hello_world
 ludolpif@lud-5490:/tmp$ cd new hello_world
 ludolpif@lud-5490:/tmp/hello_world$ code .
 # installer rust-analyser via https://code.visualstudio.com/docs/languages/rust#_code-navigation
+# Menu Run / Open Configuration
+# édite le .vscode/launch.json
+# Ajouter un LD_LIBRARY_PATH tel que cargo run le ferai
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            [...]
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "LD_LIBRARY_PATH": "/home/ludolpif/git/bevy/hello-bevy/target/debug/deps:/home/ludolpif/git/bevy/hello-bevy/target/debug:/home/ludolpif/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib:/home/ludolpif/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib"
+            },
+        }
+    ]
+}
+
+# Limiter les pics de consomation de RAM lorsque VSCode lance rust-analyser
+ludolpif@lud-5490:~$ editor ~/.cargo/config.toml
+[build]
+jobs = 2
+
+
 ludolpif@lud-5490:/tmp/hello_world$ cargo build
 ludolpif@lud-5490:/tmp/hello_world$ cargo run
 ```
