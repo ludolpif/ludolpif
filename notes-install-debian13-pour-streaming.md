@@ -16,15 +16,15 @@
 
 ```
 root@lud-5490:~# apt install lxqt-panel lxqt-core mpv # pour marquer en manuel
-root@lud-5490:~# apt autoremove --purge xsane cups-server-common libreoffice-common thunderbird hexchat meteo-qt synaptic xscreensaver avahi-daemon apparmor bluez gcr gnome-accessibility-themes sudo orca plymouth xorg-docs-core
+root@lud-5490:~# apt autoremove --purge xsane cups-server-common libreoffice-common thunderbird hexchat meteo-qt synaptic xscreensaver avahi-daemon bluez gcr gnome-accessibility-themes sudo orca plymouth xorg-docs-core
 # plymouth == splash screen de boot qui masque des détails utiles les jours de panne
 root@lud-5490:~# ln -s /bin/true /usr/local/bin/xdg-screensaver
-root@lud-5490:~# rm -r  /etc/cups /etc/apparmor.d/local
+root@lud-5490:~# rm -r  /etc/cups
 ```
 
 ## Outils que j'aime avoir sous la main
 ```
-root@lud-5490:~# apt install build-essential chromium curl git gmidimonitor gimp inotify-tools keepassxc mate-calc oathtool rsync ssh strace uvcdynctrl vim xarchiver
+root@lud-5490:~# apt install build-essential chromium curl git gmidimonitor gimp hunspell-fr-revised inotify-tools jq keepassxc mate-calc oathtool rsync ssh strace uvcdynctrl vim xarchiver
 root@lud-5490:~# sed -i -e 's/^#\?\s*PasswordAuthentication\s\+.*$/PasswordAuthentication no/' /etc/ssh/sshd_config
 root@lud-5490:~# service ssh restart
 ```
@@ -84,6 +84,14 @@ ludolpif@lud-5490:~$ chmod +x bin/backlight.sh
 
 - Dans les raccourcis globaux, associer les touches Backlight à la commande /home/ludolpif/bin/backlight.sh avec --inc et --dec respectivement
 
+## Editeur de texte (featherpad)
+
+Options / Préférences / Texte / Chemin vers le dictionnaire hunspell : `/usr/share/hunspell/fr_FR.dic`
+
+## Terminal
+
+`qterminal` est installé par défaut. Fichier / Préférences... / Apparence / Transparence du terminal : 0%
+
 ## Screencapture
 
 - Dans les raccourcis globaux, associer PrintScreen avec rien, shift, alt à screengrab avec les options -r -f -a respectivement.
@@ -136,6 +144,7 @@ ludolpif@lud-5490:~$ cp /etc/skel/.vimrc ~
 ## OBS from sources
 ```
 root@lud-5490:~# apt build-dep obs-studio
+
 ludolpif@lud-5490:~$ cd obs/
 ludolpif@lud-5490:~/obs$ ls
 ludolpif@lud-5490:~/obs$ mkdir pkg
@@ -152,6 +161,22 @@ ludolpif@lud-5490:~/obs/pkg/obs-studio-30.2.3+dfsg$ dpkg-buildpackage -us -uc
 # mais la 30.2.3 dépends toujorus de cef_binary_5060
 
 root@lud-5490:~# dpkg -i ~ludolpif/obs/pkg/{libobs0t64,obs-studio,obs-plugins}_30.2.3+dfsg-3_amd64.deb
+
+# Pour build des plugins
+root@lud-5490:~# dpkg -i ~ludolpif/obs/pkg/libobs-dev_30.2.3+dfsg-3_amd64.deb
+
+ludolpif@lud-5490:~/obs/pkg/try-build-plugins$ apt source obs-move-transition
+ludolpif@lud-5490:~/obs/pkg/try-build-plugins$ git clone https://github.com/sorayuki/obs-multi-rtmp.git
+ludolpif@lud-5490:~/obs/pkg/try-build-plugins$ cd obs-multi-rtmp
+ludolpif@lud-5490:~/obs/pkg/try-build-plugins/obs-multi-rtmp$ git checkout a629a19cc62589e9c12f883946c45dca2cc76070 && cd ..
+ludolpif@lud-5490:~/obs/pkg/try-build-plugins$ mv obs-multi-rtmp obs-multi-rtmp-0.6.0.1
+ludolpif@lud-5490:~/obs/pkg/try-build-plugins$ tar cvzf obs-multi-rtmp_0.6.0.1.orig.tar.gz --exclude .git obs-multi-rtmp-0.6.0.1/
+ludolpif@lud-5490:~/obs/pkg/try-build-plugins$ cd obs-multi-rtmp-0.6.0.1/
+ludolpif@lud-5490:~/obs/pkg/try-build-plugins/obs-multi-rtmp-0.6.0.1$ tar xf ../obs-move-transition_3.1.2-1.debian.tar.xz && cd debian
+ludolpif@lud-5490:~/obs/pkg/try-build-plugins/obs-multi-rtmp-0.6.0.1/debian$ editor *
+ludolpif@lud-5490:~/obs/pkg/try-build-plugins/obs-multi-rtmp-0.6.0.1/debian$ cd ..
+ludolpif@lud-5490:~/obs/pkg/try-build-plugins/obs-multi-rtmp-0.6.0.1$ dpkg-buildpackage -us -uc
+
 ```
 
 
@@ -286,22 +311,17 @@ root@lud-5490:~# adduser ludolpif pipewire
   - Décocher "Système de son PulseAudio", et "Qlipper"
   - Sauver la patchbay sous ~/obs/streaming-v1.qpwgraph
 
-## EasyEffects
-
-- Activer le dark mode, le démarrage à l'ouverture de session
-
-## TODO Config easyeffects
+## TODO EasyEffects
 
 - Préférences / Lancer le service au démarrage : oui
 - Préférences / Traiter tous les flux (d'entrée|de sortie) : non
-- Préférences / Gestion des périphériques : entrée et sortie : UA-25EX 
-  - pour éviter les boucles avec OBS monitor sur la default
+- Préférences / Gestion des périphériques : entrée==UA-25EX, sortie==default
 - Préférences / Style / thème sombre : oui
-- Sortie / Ajouter un effet
+- Entrée / Ajouter un effet
   - Porte
     - Seuil : -45,0 dB # Was -52,0 mais mange pas mal le son clavier
-  - Speech Processor 
-    - Denoise : oui
+  - Processeur vocal
+    - Débruiter : oui
     - Automatic Gain Control : oui
     - Noise Suppression : -9,0 dB
     - Entrée : 0,0 dB # Essayé 6,0 dB mais ça skip le compresseur HW de la carte son si je m'exclame
@@ -313,7 +333,7 @@ root@lud-5490:~# adduser ludolpif pipewire
 Remarque : sauvegarder un profil avec le même nom qu'un profil existant ne foncitonne pas, il faut supprimer et recréer pour sauver
 
 
-## TODO Premier lancement OBS
+## Premier lancement OBS
 - Alt-F2 obs
 - Assistant de config : Annuler
 - Fichier / Paramètres / Général / Sortie
@@ -323,16 +343,17 @@ Remarque : sauvegarder un profil avec le même nom qu'un profil existant ne fonc
   - Décocher "Déclancher avec le bord de l'écran # pour placer la camera librement
 - Sortie / Streaming
   - Mode de Sortie : Avancé
-  - Encodeur : FFMpeg VAAPI H.264 (NVENC)
+  - Encodeur : FFMpeg VAAPI H.264
   - Appareil VAAPI : UHD Graphics 620
   - Profil : High
-  - Débit vidéo : 6000kbps
+  - Débit vidéo : 2500kbps
   - Image-clés : 2s
 - Sortie / Enregistrement / Chemin : /home/ludolpif/Vidéos 
 - Audio / Périphériques audio globaux
-  - Audio du bureau : Default (on passera le son du micro dedans via easyeffects+qpwgraph)
+  - Audio du bureau : Désactivé
+  - Mic : EasyEffects Source
   - le reste : Désactivé
-- Vidéo / Résolution de sortie : 1536*864, 60fps
+- Vidéo / Résolution de sortie : 1920*1080 30fps ( ou 1536*864, 60fps )
 - Avancé / Enregistrement / Format nom : %CCYY-%MM-%DD_%hh-%mm-%ss-stream-%VF-%ORES-%FPSfps
 
 ## Config navigateurs
