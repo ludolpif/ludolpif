@@ -1,6 +1,6 @@
 ## Pense bête
 
-- Alt+F2 featherpad à la place de gedit 
+- Alt+F2 featherpad à la place de gedit
 - LXQt utilise Xorg par défaut
 
 ## Installation debian depuis ISO
@@ -101,7 +101,7 @@ Options / Préférences / Texte / Chemin vers le dictionnaire hunspell : `/usr/s
 
 ```
 root@lud-5490:~# cat > /etc/udev/rules.d/90-blacklist-unused-audio-video-capture-dev.rules <<"EOT"
-# lsusb 
+# lsusb
 # udevadm info -a -p /sys/class/video4linux/video3
 # udevadm control --reload-rules # for devices than can be unplugged then replugged
 
@@ -118,7 +118,7 @@ EOT
   - Touches de raccourcis
     - Raccourci : Ctrl+Alt+T
     - Description : Terminal
-    - Commande : x-terminal-emulator 
+    - Commande : x-terminal-emulator
   - Clic-droit sur l'heure en bas / Configurer "Horloge virtuelle"
     - Cocher Date, format ISO 8601, position Avant
 
@@ -139,6 +139,16 @@ end
 set background=dark
 EOT
 ludolpif@lud-5490:~$ cp /etc/skel/.vimrc ~
+```
+
+## Linux VA driver (avec encodeur HW intel)
+
+Pas ajouté non-free pour uniquement ce paquet.
+
+```
+root@lud-5490:/opt# wget http://ftp.fr.debian.org/debian/pool/non-free/i/intel-media-driver-non-free/intel-media-va-driver-non-free_25.2.3+ds1-1_amd64.deb
+root@lud-5490:/opt# apt remove --purge intel-media-va-driver
+root@lud-5490:/opt# dpkg -i intel-media-va-driver-non-free_25.2.3+ds1-1_amd64.deb
 ```
 
 ## OBS from sources
@@ -185,7 +195,7 @@ ludolpif@lud-5490:~/obs/pkg/try-build-plugins/obs-multi-rtmp-0.6.0.1$ dpkg-build
 https://github.com/palfrey/discord-apt?tab=readme-ov-file
 
 ```
-root@lud-5490:~# dpkg -i ~ludolpif/Téléchargements/discord-repo_1.0_all.deb 
+root@lud-5490:~# dpkg -i ~ludolpif/Téléchargements/discord-repo_1.0_all.deb
 root@lud-5490:~# apt install -f
 root@lud-5490:~# apt update
 root@lud-5490:~# apt install discord
@@ -219,7 +229,7 @@ ludolpif@lud-5490:~/git/bevy$ git clone -b v0.16.1 https://github.com/bevyengine
 ludolpif@lud-5490:~/git/bevy$ git clone https://github.com/ludolpif/hello-bevy
 ludolpif@lud-5490:~/git/bevy$ cd hello-bevy
 
-root@lud-5490:/home/ludolpif/git/bevy/hello-bevy# ./build-deps-systemwide.sh 
+root@lud-5490:/home/ludolpif/git/bevy/hello-bevy# ./build-deps-systemwide.sh
 
 ludolpif@lud-5490:~/git/bevy$ editor Cargo.toml
 ludolpif@lud-5490:~/git/bevy/hello-bevy$ ./build-deps-userwide.sh
@@ -234,18 +244,18 @@ root@lud-5490:/# dd if=/dev/zero of=/home/swap.img bs=1M count=8k
 8192+0 enregistrements lus
 8192+0 enregistrements écrits
 8589934592 octets (8,6 GB, 8,0 GiB) copiés, 36,4064 s, 236 MB/s
-root@lud-5490:/# mkswap /home/swap.img 
+root@lud-5490:/# mkswap /home/swap.img
 mkswap: /home/swap.img : droits 0664 non sûrs, corriger avec : chmod 0600 /home/swap.img
 Configure l'espace d'échange (swap) en version 1, taille = 8 GiB (8589930496 octets)
 pas d'étiquette, UUID=add9da34-2c8c-47e6-bfb2-a24c81b69cdf
 root@lud-5490:~# chmod 0600 /home/swap.img
-root@lud-5490:/# echo "/home/swap.img       none            swap    defaults        0       0" | tee -a /etc/fstab 
+root@lud-5490:/# echo "/home/swap.img       none            swap    defaults        0       0" | tee -a /etc/fstab
 root@lud-5490:/# systemctl daemon-reload
 root@lud-5490:/# swapon -a
 root@lud-5490:/# swapon -s
 Nom fichier                             Type            Taille          Utilisé         Priorité
 /home/swap.img                          file            1048572         0               -2
-root@lud-5490:/# 
+root@lud-5490:/#
 
 
 ## VSCode avec rust-analyser
@@ -311,26 +321,25 @@ root@lud-5490:~# adduser ludolpif pipewire
   - Décocher "Système de son PulseAudio", et "Qlipper"
   - Sauver la patchbay sous ~/obs/streaming-v1.qpwgraph
 
-## TODO EasyEffects
+## EasyEffects
 
 - Préférences / Lancer le service au démarrage : oui
 - Préférences / Traiter tous les flux (d'entrée|de sortie) : non
-- Préférences / Gestion des périphériques : entrée==UA-25EX, sortie==default
+- Préférences / Gestion des périphériques
+  - Entrée : UA-25EX
+  - Sortie : Audio interne Stéréo analogique
 - Préférences / Style / thème sombre : oui
 - Entrée / Ajouter un effet
   - Porte
     - Seuil : -45,0 dB # Was -52,0 mais mange pas mal le son clavier
-  - Processeur vocal
-    - Débruiter : oui
-    - Automatic Gain Control : oui
-    - Noise Suppression : -9,0 dB
-    - Entrée : 0,0 dB # Essayé 6,0 dB mais ça skip le compresseur HW de la carte son si je m'exclame
-    - Sortie : 9,0 dB
-  - Retard # Ne laisser que pour le debug, même "en veille" il persiste
-    - Gauche 1000,0 ms
-    - En veille sauf pour debug
-
-Remarque : sauvegarder un profil avec le même nom qu'un profil existant ne foncitonne pas, il faut supprimer et recréer pour sauver
+  - Compresseur
+    - Entrée : +12 dB
+    - Sortie : 0 dB
+- Préréglage / Local / Nom : streaming-v1
+- Pipewire / Chargement automatique des réglages / Bouton en bas : Entrée
+  - Périphérique : UA-25EX
+  - Préréglage : streaming-v1
+  - Cliquer sur "+" pour ajouter
 
 
 ## Premier lancement OBS
@@ -348,7 +357,7 @@ Remarque : sauvegarder un profil avec le même nom qu'un profil existant ne fonc
   - Profil : High
   - Débit vidéo : 2500kbps
   - Image-clés : 2s
-- Sortie / Enregistrement / Chemin : /home/ludolpif/Vidéos 
+- Sortie / Enregistrement / Chemin : /home/ludolpif/Vidéos
 - Audio / Périphériques audio globaux
   - Audio du bureau : Désactivé
   - Mic : EasyEffects Source
