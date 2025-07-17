@@ -24,7 +24,7 @@ root@lud-5490:~# rm -r  /etc/cups
 
 ## Outils que j'aime avoir sous la main
 ```
-root@lud-5490:~# apt install build-essential chromium curl git gmidimonitor gimp hunspell-fr-revised inotify-tools jq keepassxc mate-calc oathtool rsync ssh strace uvcdynctrl vim xarchiver
+root@lud-5490:~# apt install build-essential chromium curl fonts-noto-core git gmidimonitor gimp hunspell-fr-revised inotify-tools jq keepassxc mate-calc oathtool rsync ssh strace uvcdynctrl vim xarchiver
 root@lud-5490:~# sed -i -e 's/^#\?\s*PasswordAuthentication\s\+.*$/PasswordAuthentication no/' /etc/ssh/sshd_config
 root@lud-5490:~# service ssh restart
 ```
@@ -44,6 +44,14 @@ DefaultTimeoutStopSec=9s
 #DefaultTimeoutAbortSec=
 DefaultDeviceTimeoutSec=9s
 ```
+
+## Fix wifi/wired route priorities
+
+- Si la connexion filaire est gérée par ifupdown (mentionné dans /etc/network/interfaces), sa métrique de route sera de 1002.
+- Si le Wi-Fi est géré par Network-Manager, sa métrique de route sera de 600.
+
+Cette métrique est un coût, le Wi-Fi sera donc utilisé en priorité.
+Pour obtenir une métrique de 100 sur une connexion filaire, il suffit de ne pas la mentionner du tout dans /etc/network/interfaces.
 
 ## Enable SysRq to have manual OOM killer
 
@@ -187,6 +195,11 @@ ludolpif@lud-5490:~/obs/pkg/try-build-plugins/obs-multi-rtmp-0.6.0.1/debian$ edi
 ludolpif@lud-5490:~/obs/pkg/try-build-plugins/obs-multi-rtmp-0.6.0.1/debian$ cd ..
 ludolpif@lud-5490:~/obs/pkg/try-build-plugins/obs-multi-rtmp-0.6.0.1$ dpkg-buildpackage -us -uc
 
+
+# Essais de plugins déjà packagés dans debian
+
+ludolpif@lud-5490:~$ apt-cache search ^obs-
+root@lud-5490:~# apt install obs-color-monitor obs-move-transition obs-pipewire-audio-capture obs-retro-effects obs-stroke-glow-shadow obs-time-source
 ```
 
 
