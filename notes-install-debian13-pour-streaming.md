@@ -133,7 +133,9 @@ Options / Préférences / Texte / Chemin vers le dictionnaire hunspell : `/usr/s
 - Dans les raccourcis globaux, associer PrintScreen avec rien, shift, alt à screengrab avec les options -r -f -a respectivement.
 
 
-## Désactiver quelques périphériques (car les fallbacks et defaut dans obs, easyeffects, etc ça déconne)
+## Désactiver quelques périphériques
+
+Car les fallbacks et default dans obs, easyeffects, etc ça déconne un peu.
 
 ```
 root@lud-5490:~# cat > /etc/udev/rules.d/90-blacklist-unused-audio-video-capture-dev.rules <<"EOT"
