@@ -255,8 +255,10 @@ TODO, documenter : obs-soundboard compilé à la main en .deb
 
 ## ASCII animations
 
+```
 root@lud-5490:~# apt install sl
 ludolpif@lud-5490:~$ sl # Le train de la hype !
+```
 
 ## git
 
