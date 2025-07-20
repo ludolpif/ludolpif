@@ -92,6 +92,34 @@ ludolpif@lud-5490:~$ chmod +x bin/backlight.sh
 
 - Dans les raccourcis globaux, associer les touches Backlight à la commande /home/ludolpif/bin/backlight.sh avec --inc et --dec respectivement
 
+## Config d'écrans particulières
+
+lxqt-config-monitor ne propose l'option mirroir or j'ai fixé un écran au plafond et j'utilise un mirroir. (Ouais t'inquiètes).
+
+```
+root@lud-5490:~# apt install autorandr
+ludolpif@lud-5490:~$ xrandr --output HDMI-1 --reflect y
+ludolpif@lud-5490:~$ autorandr --save stream
+Saved current configuration as profile 'stream'
+ludolpif@lud-5490:~$ ls /etc/xdg/autostart/autorandr*
+/etc/xdg/autostart/autorandr.desktop  /etc/xdg/autostart/autorandr-kde.desktop
+
+root@lud-5490:~# cat > /etc/sddm/Xsetup 
+#!/bin/sh
+# Xsetup - run as root before the login dialog appears
+xrandr --output HDMI-1 --off
+^D
+root@lud-5490:~# chmod +x /etc/sddm/Xsetup
+
+root@lud-5490:~# cat > /etc/sddm.conf 
+[XDisplay]
+# Xsetup script path
+# A script to execute when starting the display server
+DisplayCommand=/etc/sddm/Xsetup
+^D
+
+```
+
 ## Editeur de texte (featherpad)
 
 Options / Préférences / Texte / Chemin vers le dictionnaire hunspell : `/usr/share/hunspell/fr_FR.dic`
@@ -217,6 +245,17 @@ ludolpif@lud-5490:~$ discord
 ludolpif@lud-5490:~$ touch ~ludolpif/.config/discord/Cache/NOBACKUPDIR.TAG
 ```
 
+## Soundboard
+
+Soundux semble un dead project :(
+
+TODO, documenter : obs-soundboard compilé à la main en .deb
+
+## ASCII animations
+
+root@lud-5490:~# apt install sl
+ludolpif@lud-5490:~$ sl # Le train de la hype !
+
 ## git
 
 ```
@@ -252,7 +291,7 @@ ludolpif@lud-5490:~/git/bevy/hello-bevy$ cargo build
 
 ## Swapfile et zswap pour rust-analyser + laptop trop juste en RAM
 
-
+```
 root@lud-5490:/# dd if=/dev/zero of=/home/swap.img bs=1M count=8k
 8192+0 enregistrements lus
 8192+0 enregistrements écrits
@@ -269,7 +308,7 @@ root@lud-5490:/# swapon -s
 Nom fichier                             Type            Taille          Utilisé         Priorité
 /home/swap.img                          file            1048572         0               -2
 root@lud-5490:/#
-
+```
 
 ## VSCode avec rust-analyser
 
@@ -380,7 +419,7 @@ root@lud-5490:~# adduser ludolpif pipewire
 
 ## Config navigateurs
 
-### Firefox : général purpose (hors twitch.tv)
+### Firefox : général purpose (hors twitch.tv)
 
 - Préférences / Accueil
   - Accueil / Contenu de la page d'accueil : Raccourcis, non
