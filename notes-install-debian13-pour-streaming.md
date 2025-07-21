@@ -98,26 +98,34 @@ lxqt-config-monitor ne propose l'option mirroir or j'ai fixé un écran au plafo
 
 ```
 root@lud-5490:~# apt install autorandr
-ludolpif@lud-5490:~$ xrandr --output HDMI-1 --reflect y
+ludolpif@lud-5490:~$ lxqt-config-monitor
+root@lud-5490:~# dpkg-divert --divert /usr/share/dbus-1/services/org.kde.kscreen.disabled --rename /usr/share/dbus-1/services/org.kde.kscreen.service
+
+ludolpif@lud-5490:~$ xrandr --listmonitors
+Monitors: 2
+ 0: +*eDP-1 1366/309x768/173+1280+0  eDP-1
+ 1: +HDMI-1 1280/376x1024/301+0+0  HDMI-1
+ludolpif@lud-5490:~$ xrandr --output "HDMI-1" --fb $((1366+1280))x768 --transform 1,0,0,0,1,-256,0,0,1 --filter nearest --reflect y
 ludolpif@lud-5490:~$ autorandr --save stream
 Saved current configuration as profile 'stream'
 ludolpif@lud-5490:~$ ls /etc/xdg/autostart/autorandr*
 /etc/xdg/autostart/autorandr.desktop  /etc/xdg/autostart/autorandr-kde.desktop
 
-root@lud-5490:~# cat > /etc/sddm/Xsetup 
+root@lud-5490:~# cat > /etc/sddm/Xsetup
 #!/bin/sh
 # Xsetup - run as root before the login dialog appears
 xrandr --output HDMI-1 --off
 ^D
 root@lud-5490:~# chmod +x /etc/sddm/Xsetup
 
-root@lud-5490:~# cat > /etc/sddm.conf 
+root@lud-5490:~# cat > /etc/sddm.conf
 [XDisplay]
 # Xsetup script path
 # A script to execute when starting the display server
 DisplayCommand=/etc/sddm/Xsetup
 ^D
 
+root@lud-5490:~# reboot
 ```
 
 ## Editeur de texte (featherpad)
