@@ -6,6 +6,9 @@
 - user : ludolpif, mdp root et user settés (ludolpif n'est pas pas sudoer, mais sudo est installé)
 - Tout par défaut, dans tasksel choisir KDE, utilitaires usuels du système
 
+## Config Apparence
+
+TODO détailler passage en thème sombre mais conserver le thème debian pour SDDM
 
 ## Config navigateurs
 
