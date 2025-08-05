@@ -1,5 +1,3 @@
-## Pense bête
-
 ## Installation debian depuis ISO
 
 - Install from iso debian-testing weekly 2025-06-08 (debian 13)
