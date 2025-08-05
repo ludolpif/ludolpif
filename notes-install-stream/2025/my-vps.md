@@ -267,7 +267,7 @@ EOT
 root@my-vps:~# systemctl restart systemd-sysctl
 ```
 
-- Tester depuis nuc1 que le forwarding + masquerade fonctionne (pour n'improte quelle destination vers internet)
+- Tester depuis nuc1 que le forwarding + masquerade fonctionne (pour n'importe quelle destination vers internet)
 
 ```
 root@nuc1:~# ping -c2 2001:4860:4860::8888
