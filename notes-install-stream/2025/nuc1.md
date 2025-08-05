@@ -19,12 +19,16 @@ root@nuc1:~# rm -r /home/temp
 ## Installation de mes outils préférés
 
 ```
-# Général
-root@nuc1:~# apt install firmware-realtek iftop iotop ntfs-3g rsync screen secure-delete strace tree unattended-upgrades unzip vim
-# Site ludolpif.fr
+# Spécifique à mon environnement
+root@nuc1:~# apt install firmware-realtek ntfs-3g
+# Outils système généraux
+root@nuc1:~# apt install rsync screen secure-delete tree unattended-upgrades unzip vim
+# Outils pour débogage réseau/système
+root@nuc1:~# apt install iftop iotop iperf iperf3 strace tcpdump
+# Hébergement site ludolpif.fr
 root@nuc1:~# apt install apache2 certbot make python3-certbot-apache php-fpm php-intl php-yaml
 # Réseau pour le homelab
-root@nuc1:~# apt install iperf iperf3 radvd systemd-resolved tcpdump udhcpd vlan wireguard
+root@nuc1:~# apt install radvd systemd-resolved udhcpd vlan wireguard
 # Outils streaming
 root@nuc1:~# apt install streamlink
 
@@ -39,14 +43,15 @@ endif
 EOT
 
 root@nuc1:~# update-alternatives --config editor
-# Choisir /usr/bin/vim.basic
+# J'aime choisir /usr/bin/vim.basic
 
 root@nuc1:~# editor ~/.bashrc 
 # Décommenter pour avoir de la couleur et des alias
 # Importer les sections pour .bash_aliases et bash_completion depuis /etc/skel/.bashrc
 
 root@nuc1:~# editor ~/.bash_aliases
-# Ajouter des fonctions *_stream() et des alias pour masquer certaines valeurs dans les résultats de commandes interactives
+# Ajouter des fonctions *_stream() et des alias pour masquer 
+#  certaines valeurs dans les résultats de commandes interactives
 ```
 
 ## Configuration du système
@@ -80,9 +85,10 @@ root@nuc1:~# networkctl reconfigure enx000*********
 ## Configuration de mes (borg) backups
 
 ```
-root@nuc1:~# adduser --system --firstuid 800 --gecos 'Borg Backup user lud-mn1' --home /mnt/bkp/lud-mn1 --shell /bin/sh bbkp-mn1 
-root@nuc1:~# adduser --system --firstuid 800 --gecos 'Borg Backup lud-5490' --home /mnt/bkp/lud-5490 --shell /bin/sh bbkp-5490 
-root@nuc1:~# adduser --system --firstuid 800 --gecos 'Borg Backup piou' --home /mnt/bkp/piou --shell /bin/sh bbkp-piou
+root@nuc1:~# alias adduserbkp='adduser --system --firstuid 800 --shell /bin/sh' 
+root@nuc1:~# adduser --gecos 'Borg Backup user lud-mn1' --home /mnt/bkp/lud-mn1 bbkp-mn1 
+root@nuc1:~# adduser --gecos 'Borg Backup lud-5490' --home /mnt/bkp/lud-5490 bbkp-5490 
+root@nuc1:~# adduser --gecos 'Borg Backup piou' --home /mnt/bkp/piou bbkp-piou
 
 root@nuc1:~# dpkg -i /opt/borg-family_0.2-1_all.deb 
 root@nuc1:~# apt install -f
@@ -187,7 +193,9 @@ These files will be updated when the certificate renews.
 Certbot has set up a scheduled task to automatically renew this certificate in the background.
 
 Deploying certificate
-Some rewrite rules copied from /etc/apache2/sites-enabled/vh-stream.conf were disabled in the vhost for your HTTPS site located at /etc/apache2/sites-available/vh-stream-le-ssl.conf because they have the potential to create redirection loops.
+Some rewrite rules copied from /etc/apache2/sites-enabled/vh-stream.conf were disabled in the vhost for your
+ HTTPS site located at /etc/apache2/sites-available/vh-stream-le-ssl.conf because they have the potential to
+ create redirection loops.
 Successfully deployed certificate for ludolpif.fr to /etc/apache2/sites-available/vh-stream-le-ssl.conf
 Successfully deployed certificate for www.ludolpif.fr to /etc/apache2/sites-available/vh-stream-le-ssl.conf
 Added an HTTP->HTTPS rewrite in addition to other RewriteRules; you may wish to check for overall consistency.
@@ -209,11 +217,12 @@ To activate the new configuration, you need to run:
 root@nuc1:~# systemctl reload apache2
 
 
-ludolpif@lud-mn1:~$ curl -vL --no-progress-meter -o /dev/null --stderr - ludolpif.fr/youtube | grep Location
+ludolpif@lud-mn1:~$ alias curltrace='curl -vL --no-progress-meter -o /dev/null --stderr -'
+ludolpif@lud-mn1:~$ curltrace ludolpif.fr/youtube | grep Location
 < Location: https://ludolpif.fr/youtube
 < Location: https://www.youtube.com/@ludolpif
-ludolpif@lud-mn1:~$ curl -vL --no-progress-meter -o /dev/null --stderr - ludolpif.fr/discord | grep Location
-< Location: https://ludolpif.fr/discord
+ludolpif@lud-mn1:~$ curltrace ludolpif.fr/dISCord | grep Location
+< Location: https://ludolpif.fr/dISCord
 < Location: https://discord.gg/GfJ5RzcczV
 ludolpif@lud-mn1:~$ 
 ```
@@ -232,7 +241,8 @@ EOT
 root@nuc1:~# systemctl restart systemd-sysctl
 
 
-# Hack pour utiliser le systemd-resolved de nuc1 depuis les machines du homelab (et ne pas installer un cache DNS complet compatible DoT)
+# Hack pour utiliser le systemd-resolved de nuc1 depuis les machines du homelab
+# (et ne pas installer un cache DNS complet compatible DoT)
 root@nuc1:~# editor /etc/systemd/resolved.conf
 [Resolve]
 DNS=******************
@@ -243,7 +253,8 @@ DNSStubListenerExtra=192.168.10.1:53
 DNSStubListenerExtra=[2001:db8:0:a::1]:53
 root@nuc1:~# systemctl restart systemd-resolved
 
-# Hack pour installer facilement des distro sur le homelab (internet sur le default vlan en dhcp)
+# Hack pour installer facilement des distro sur le homelab
+# (internet sur le default vlan en dhcp)
 root@nuc1:~# editor /etc/udhcpd.conf
 root@nuc1:~# systemctl restart udhcpd
 

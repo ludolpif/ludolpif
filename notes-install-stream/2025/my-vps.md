@@ -229,9 +229,11 @@ net.ipv4.conf.all.forwarding = 1
 net.ipv6.conf.all.forwarding = 1
 EOT
 root@my-vps:~# systemctl restart systemd-sysctl
+```
 
-# Tester depuis nuc1 que le forwarding + masquerade fonctionne (pour n'improte quelle destination vers internet)
+- Tester depuis nuc1 que le forwarding + masquerade fonctionne (pour n'improte quelle destination vers internet)
 
+```
 root@nuc1:~# ping -c2 2001:4860:4860::8888      
 PING 2001:4860:4860::8888(2001:4860:4860::8888) 56 data bytes
 64 bytes from 2001:4860:4860::8888: icmp_seq=1 ttl=114 time=42.2 ms
@@ -250,15 +252,11 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 2 packets transmitted, 2 received, 0% packet loss, time 1002ms
 rtt min/avg/max/mdev = 41.175/42.433/43.691/1.258 ms
 root@nuc1:~# 
-
-
-
-TODO : recurseur DNS supportant DoT
-
 ```
 
+- TODO : recurseur DNS supportant DoT
 
-## Bonus Règles nftables avancées pour auto-hébergement
+## Bonus Règles nftables avancées pour auto-hébergement
 
 `/etc/nftables.conf:`
 
