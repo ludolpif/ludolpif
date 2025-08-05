@@ -16,7 +16,7 @@ root@nuc1:~# deluser temp
 root@nuc1:~# rm -r /home/temp
 ```
 
-## Installation de mes outils préférés
+## Installation des tous les paquets utiles
 
 ```
 # Spécifique à mon environnement
@@ -31,6 +31,13 @@ root@nuc1:~# apt install apache2 certbot make python3-certbot-apache php-fpm php
 root@nuc1:~# apt install radvd systemd-resolved udhcpd vlan wireguard
 # Outils streaming
 root@nuc1:~# apt install streamlink
+```
+
+## Personnalisation minimale pour moi et pour le stream
+
+```
+root@nuc1:~# update-alternatives --config editor
+# J'aime choisir /usr/bin/vim.basic
 
 root@nuc1:~# cat > /root/.vimrc <<"EOT"
 runtime! defaults.vim
@@ -42,21 +49,19 @@ else
 endif
 EOT
 
-root@nuc1:~# update-alternatives --config editor
-# J'aime choisir /usr/bin/vim.basic
 
-root@nuc1:~# editor ~/.bashrc 
+root@nuc1:~# editor ~/.bashrc
 # Décommenter pour avoir de la couleur et des alias
 # Importer les sections pour .bash_aliases et bash_completion depuis /etc/skel/.bashrc
 
 root@nuc1:~# editor ~/.bash_aliases
-# Ajouter des fonctions *_stream() et des alias pour masquer 
+# Ajouter des fonctions *_stream() et des alias pour masquer
 #  certaines valeurs dans les résultats de commandes interactives
 ```
 
 ## Configuration du système
 ```
-root@nuc1:~# editor /etc/apt/apt.conf.d/50unattended-upgrades 
+root@nuc1:~# editor /etc/apt/apt.conf.d/50unattended-upgrades
 Unattended-Upgrade::Mail "root";
 Unattended-Upgrade::Automatic-Reboot "true";
 root@nuc1:~# /etc/apt/apt.conf.d/20auto-upgrades
@@ -67,9 +72,9 @@ root@nuc1:~# editor /etc/nftables.conf
 # Configuration basique pour l'instant
 root@nuc1:~# systemctl restart nftables
 
-root@nuc1:~# systemctl enable nftables.service 
+root@nuc1:~# systemctl enable nftables.service
 Created symlink /etc/systemd/system/sysinit.target.wants/nftables.service → /lib/systemd/system/nftables.service.
-root@nuc1:~# systemctl start nftables.service 
+root@nuc1:~# systemctl start nftables.service
 
 # Script pour debugguer plus facilement des drop en input
 root@nuc1:~# editor /usr/local/sbin/nftables-enable-input-drop-log
@@ -85,12 +90,12 @@ root@nuc1:~# networkctl reconfigure enx000*********
 ## Configuration de mes (borg) backups
 
 ```
-root@nuc1:~# alias adduserbkp='adduser --system --firstuid 800 --shell /bin/sh' 
-root@nuc1:~# adduserbkp --gecos 'Borg Backup user lud-mn1' --home /mnt/bkp/lud-mn1 bbkp-mn1 
-root@nuc1:~# adduserbkp --gecos 'Borg Backup lud-5490' --home /mnt/bkp/lud-5490 bbkp-5490 
+root@nuc1:~# alias adduserbkp='adduser --system --firstuid 800 --shell /bin/sh'
+root@nuc1:~# adduserbkp --gecos 'Borg Backup user lud-mn1' --home /mnt/bkp/lud-mn1 bbkp-mn1
+root@nuc1:~# adduserbkp --gecos 'Borg Backup lud-5490' --home /mnt/bkp/lud-5490 bbkp-5490
 root@nuc1:~# adduserbkp --gecos 'Borg Backup piou' --home /mnt/bkp/piou bbkp-piou
 
-root@nuc1:~# dpkg -i /opt/borg-family_0.2-1_all.deb 
+root@nuc1:~# dpkg -i /opt/borg-family_0.2-1_all.deb
 root@nuc1:~# apt install -f
 
 root@nuc1:/etc/borg-family# editor envvars
@@ -182,7 +187,7 @@ We recommend selecting either all domains, or all domains in a VirtualHost/serve
 2: www.ludolpif.fr
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Select the appropriate numbers separated by commas and/or spaces, or leave input
-blank to select all options shown (Enter 'c' to cancel): 
+blank to select all options shown (Enter 'c' to cancel):
 Requesting a certificate for ludolpif.fr and www.ludolpif.fr
 
 Successfully received certificate.
@@ -206,10 +211,10 @@ If you like Certbot, please consider supporting our work by:
  * Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
  * Donating to EFF:                    https://eff.org/donate-le
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-root@nuc1:~# vim /etc/apache2/sites-enabled/vh-stream.conf 
-root@nuc1:~# vim /etc/apache2/sites-enabled/vh-stream-le-ssl.conf 
-root@nuc1:~# rm /etc/apache2/sites-enabled/vh-stream-le-ssl.conf 
-root@nuc1:~# rm /etc/apache2/sites-available/vh-stream-le-ssl.conf 
+root@nuc1:~# vim /etc/apache2/sites-enabled/vh-stream.conf
+root@nuc1:~# vim /etc/apache2/sites-enabled/vh-stream-le-ssl.conf
+root@nuc1:~# rm /etc/apache2/sites-enabled/vh-stream-le-ssl.conf
+root@nuc1:~# rm /etc/apache2/sites-available/vh-stream-le-ssl.conf
 root@nuc1:~# a2ensite default-ssl
 Enabling site default-ssl.
 To activate the new configuration, you need to run:
@@ -224,7 +229,7 @@ ludolpif@lud-mn1:~$ curltrace ludolpif.fr/youtube | grep Location
 ludolpif@lud-mn1:~$ curltrace ludolpif.fr/dISCord | grep Location
 < Location: https://ludolpif.fr/dISCord
 < Location: https://discord.gg/GfJ5RzcczV
-ludolpif@lud-mn1:~$ 
+ludolpif@lud-mn1:~$
 ```
 
 ## Configuration réseau pour homelab

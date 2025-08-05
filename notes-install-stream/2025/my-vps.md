@@ -2,17 +2,56 @@
 
 - Install debian 12 depuis Control Panel de l'hébergeur (Debian 13 non dispo dans ses images au 2025-08-05)
 
-## Configuration ssh et suppression cloud-init
+```
+$ ssh-copy-id ...
+$ ssh root@my-vps # via la clé ssh
+
+root@my-vps:~# editor /etc/ssh/sshd_config
+# PasswordAuthentication no
+root@my-vps:~# rm /etc/ssh/sshd_config.d/50-cloud-init.conf
+root@my-vps:~# service ssh reload
+
+root@my-vps:~# deluser temp
+root@my-vps:~# rm -r /home/temp
+```
+
+## Installation des tous les paquets utiles
+
+L'utilitaire `dig` est dans le paquet `bind9-dnsutils`.
+```
+root@my-vps:~# apt install bind9-dnsutils iperf3 wireguard
+```
+
+## Personnalisation minimale pour moi et pour le stream
 
 ```
 root@my-vps:~# update-alternatives --config editor
-# Je préfère vim.basic
+# J'aime choisir /usr/bin/vim.basic
 
-root@my-vps:~# editor /root/.ssh/authorized_keys
-# Ajouter des clés publiques, se reconnecter avec
+root@my-vps:~# cat > /root/.vimrc <<"EOT"
+runtime! defaults.vim
+runtime! debian.vim
+if &diff
+	syntax off
+else
+	set mouse=
+endif
+EOT
 
+
+root@my-vps:~# editor ~/.bashrc
+# Décommenter pour avoir de la couleur et des alias
+# Importer les sections pour .bash_aliases et bash_completion depuis /etc/skel/.bashrc
+
+root@my-vps:~# editor ~/.bash_aliases
+# Ajouter des fonctions *_stream() et des alias pour masquer
+#  certaines valeurs dans les résultats de commandes interactives
+```
+
+## Suppression cloud-init
+
+```
 root@my-vps:~# apt autoremove --purge cloud-init
-rm /etc/ssh/sshd_config.d/50-cloud-init.conf
 
 # Remarque, le réseau IPv4 et IPv6 est configuré avec netplan, ifupdown n'est pas installé
 
@@ -30,7 +69,7 @@ network:
             match:
                 name: en*
     version: 2
-root@my-vps:~# 
+root@my-vps:~#
 
 ```
 
@@ -50,10 +89,7 @@ root@my-vps:~# reboot
 
 ## Déploiement VPN Wireguard
 
-L'utilitaire `dig` est dans le paquet `bind9-dnsutils`.
-
 ```
-root@my-vps:~# apt install bind9-dnsutils iperf3 wireguard
 
 # Il faut faire simultanément la config sur les deux machines, exemple ici : my-vps et nuc1
 
@@ -111,11 +147,11 @@ root@nuc1:/dev/shm/wireguard# cat privatekey >> wg0.conf
 root@nuc1:/dev/shm/wireguard# nano wg0.conf
 # Déplacer la clé privée de la dernière ligne du fichier au bon endroit
 
-root@my-vps:/dev/shm/wireguard# wg pubkey < privatekey 
+root@my-vps:/dev/shm/wireguard# wg pubkey < privatekey
 # Renseigner la publickey générée depuis my-vps dans wg0.conf à l'autre bout du tunnel (sur nuc1)
 root@nuc1:/dev/shm/wireguard# nano wg0.conf
 
-root@nuc1:/dev/shm/wireguard# wg pubkey < privatekey 
+root@nuc1:/dev/shm/wireguard# wg pubkey < privatekey
 # Renseigner la publickey générée depuis nuc1 dans wg0.conf à l'autre bout du tunnel (sur my-vps)
 root@my-vps:/dev/shm/wireguard# nano wg0.conf
 
@@ -161,7 +197,7 @@ PING fd10:200:100::42 (fd10:200:100::42) 56 data bytes
 --- fd10:200:100::42 ping statistics ---
 2 packets transmitted, 2 received, 0% packet loss, time 1002ms
 rtt min/avg/max/mdev = 30.883/30.908/30.933/0.025 ms
-root@my-vps:~# 
+root@my-vps:~#
 
 root@nuc1:~# wg
 interface: wg0
@@ -186,7 +222,7 @@ PING 10.200.100.1 (10.200.100.1) 56(84) bytes of data.
 --- 10.200.100.1 ping statistics ---
 2 packets transmitted, 2 received, 0% packet loss, time 1001ms
 rtt min/avg/max/mdev = 30.527/30.694/30.861/0.167 ms
-root@nuc1:~# 
+root@nuc1:~#
 
 
 root@my-vps:~# cat >/etc/nftables.conf <<"EOT"
@@ -234,7 +270,7 @@ root@my-vps:~# systemctl restart systemd-sysctl
 - Tester depuis nuc1 que le forwarding + masquerade fonctionne (pour n'improte quelle destination vers internet)
 
 ```
-root@nuc1:~# ping -c2 2001:4860:4860::8888      
+root@nuc1:~# ping -c2 2001:4860:4860::8888
 PING 2001:4860:4860::8888(2001:4860:4860::8888) 56 data bytes
 64 bytes from 2001:4860:4860::8888: icmp_seq=1 ttl=114 time=42.2 ms
 64 bytes from 2001:4860:4860::8888: icmp_seq=2 ttl=114 time=40.7 ms
@@ -251,7 +287,7 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 --- 8.8.8.8 ping statistics ---
 2 packets transmitted, 2 received, 0% packet loss, time 1002ms
 rtt min/avg/max/mdev = 41.175/42.433/43.691/1.258 ms
-root@nuc1:~# 
+root@nuc1:~#
 ```
 
 - TODO : recurseur DNS supportant DoT
