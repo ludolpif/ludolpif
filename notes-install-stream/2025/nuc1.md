@@ -86,9 +86,9 @@ root@nuc1:~# networkctl reconfigure enx000*********
 
 ```
 root@nuc1:~# alias adduserbkp='adduser --system --firstuid 800 --shell /bin/sh' 
-root@nuc1:~# adduser --gecos 'Borg Backup user lud-mn1' --home /mnt/bkp/lud-mn1 bbkp-mn1 
-root@nuc1:~# adduser --gecos 'Borg Backup lud-5490' --home /mnt/bkp/lud-5490 bbkp-5490 
-root@nuc1:~# adduser --gecos 'Borg Backup piou' --home /mnt/bkp/piou bbkp-piou
+root@nuc1:~# adduserbkp --gecos 'Borg Backup user lud-mn1' --home /mnt/bkp/lud-mn1 bbkp-mn1 
+root@nuc1:~# adduserbkp --gecos 'Borg Backup lud-5490' --home /mnt/bkp/lud-5490 bbkp-5490 
+root@nuc1:~# adduserbkp --gecos 'Borg Backup piou' --home /mnt/bkp/piou bbkp-piou
 
 root@nuc1:~# dpkg -i /opt/borg-family_0.2-1_all.deb 
 root@nuc1:~# apt install -f
