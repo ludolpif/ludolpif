@@ -1,8 +1,9 @@
 ## Installation debian depuis ISO
 
-- Install from iso debian 12 stable
+- Install from iso debian-testing weekly 2025-06-08 (debian 13)
 - user : temp, mdp provisoire pour paramétrérer les clés SSH
-- tasksel : pas d'env graphique, serveur SSH, serveur web, utilitaires usuels du système
+- tasksel : pas d'env graphique, serveur SSH, utilitaires usuels du système
+- popcon : oui
 
 ```
 $ ssh-copy-id ...
