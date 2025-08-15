@@ -84,6 +84,7 @@ root@nuc1:~# chmod +x /usr/local/sbin/nftables-enable-input-drop-log
 
 # Configuration DHCP sans route par défaut pour interface USB, branchée à la box internet
 root@nuc1:~# editor /etc/systemd/network/dhcp.network
+root@nuc1:~# systemctl enable systemd-networkd
 root@nuc1:~# networkctl reload
 root@nuc1:~# networkctl reconfigure enx000*********
 ```
@@ -238,6 +239,10 @@ ludolpif@lud-mn1:~$
 ```
 # Configuration statique interface eno1 pour homelab (192.168.10.1/24, 2001:db8:0:a::1/64) + VLANs taggés
 root@nuc1:~# editor /etc/network/interfaces
+root@nuc1:~# \systemctl edit networking.service
+[Service]
+TimeoutStartSec=10s
+
 root@nuc1:~# systemctl restart networking
 
 root@nuc1:~# cat > /etc/sysctl.d/50-router.conf <<"EOT"
@@ -251,12 +256,15 @@ root@nuc1:~# systemctl restart systemd-sysctl
 # (et ne pas installer un cache DNS complet compatible DoT)
 root@nuc1:~# editor /etc/systemd/resolved.conf
 [Resolve]
-DNS=******************
-FallbackDNS=*******************
+DNS=80.67.169.40#ns1.fdn.fr 2001:910:800::40#ns.fdn.fr
+FallbackDNS=80.67.169.12#ns0.fdn.fr 2001:910:800::12#ns0.fdn.fr
+Domains=~.
 DNSOverTLS=yes
-# listen on eno1 too
+LLMNR=no
+DNSStubListenerExtra=192.168.1.42:53
 DNSStubListenerExtra=192.168.10.1:53
 DNSStubListenerExtra=[2001:db8:0:a::1]:53
+ReadEtcHosts=no
 root@nuc1:~# systemctl restart systemd-resolved
 
 # Hack pour installer facilement des distro sur le homelab
@@ -276,3 +284,28 @@ root@nuc1:~# editor /etc/nftables.conf
 root@nuc1:~# systemctl restart nftables
 ```
 
+## Fix résolutions DNS lentes ou pas de réponse du tout si DoT est actif
+
+Se produit dans le cas où on a dans `/etc/systemd/resolved.conf` :
+```
+[Resolve]
+DNS=<un DNS externe>
+FallbackDNS=<un DNS externe>
+DNSOverTLS=yes
+```
+et une box qui annonce en DHCPv4/DHCPv6/RA un cache DNS qui n'écoute que sur le port 53 et pas 853 (DoT).
+
+`resolved` a une notion de serveurs DNS globaux (définis dans `/etc/systemd/resolved.conf` et de serveur DNS par interface, définis par systemd-networkd ou d'autres (ifupdown, NetworkManager...). Ces derniers sont prioritaires par défaut. L'option `Domains=~.` peut aider à donner la priorité aux DNS de la section globale (si la valeur par interface de Domains est vide).
+
+Si on utilise `systemd-networkd` et qu'on on veut absolument éviter des requêtes DNS vers des DNS appris via RA ou le DHCPv4 ou le DHCPv6, il faut forcer `UseDNS=false` dans 3 sections de `/etc/systemd/network/*.network`. Le `UseDNS=false` global dans [Network] ne marche pas pour moi (des DNS via le DHCPv6 sont appris quand même depuis ma box internet).
+
+```
+[DHCPv4]
+UseDNS=false
+
+[DHCPv6]
+UseDNS=false
+
+[IPv6AcceptRA]
+UseDNS=false
+```
