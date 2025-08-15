@@ -10,9 +10,6 @@ root@my-vps:~# editor /etc/ssh/sshd_config
 # PasswordAuthentication no
 root@my-vps:~# rm /etc/ssh/sshd_config.d/50-cloud-init.conf
 root@my-vps:~# service ssh reload
-
-root@my-vps:~# deluser temp
-root@my-vps:~# rm -r /home/temp
 ```
 
 ## Installation des tous les paquets utiles
