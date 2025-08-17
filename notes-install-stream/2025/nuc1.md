@@ -17,6 +17,14 @@ root@nuc1:~# deluser temp
 root@nuc1:~# rm -r /home/temp
 ```
 
+## Fix bad Debian defaults pour OpenSSH et QoS (DSCP)
+
+```
+root@my-vps:~# echo 'IPQoS af21 cs1' > /etc/ssh/ssh_config.d/ssh_modern_IPQoS.conf
+root@my-vps:~# echo 'IPQoS af21 cs1' > /etc/ssh/sshd_config.d/ssh_modern_IPQoS.conf
+root@my-vps:~# service ssh reload
+```
+
 ## Installation des tous les paquets utiles
 
 ```
@@ -96,6 +104,7 @@ root@nuc1:~# alias adduserbkp='adduser --system --firstuid 800 --shell /bin/sh'
 root@nuc1:~# adduserbkp --gecos 'Borg Backup user lud-mn1' --home /mnt/bkp/lud-mn1 bbkp-mn1
 root@nuc1:~# adduserbkp --gecos 'Borg Backup lud-5490' --home /mnt/bkp/lud-5490 bbkp-5490
 root@nuc1:~# adduserbkp --gecos 'Borg Backup piou' --home /mnt/bkp/piou bbkp-piou
+root@nuc1:~# adduserbkp --gecos 'Borg Backup my-vps' --home /mnt/bkp/my-vps bbkp-vps
 
 root@nuc1:~# dpkg -i /opt/borg-family_0.2-1_all.deb
 root@nuc1:~# apt install -f

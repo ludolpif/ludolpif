@@ -12,6 +12,14 @@ root@my-vps:~# rm /etc/ssh/sshd_config.d/50-cloud-init.conf
 root@my-vps:~# service ssh reload
 ```
 
+## Fix bad Debian defaults pour OpenSSH et QoS (DSCP)
+
+```
+root@my-vps:~# echo 'IPQoS af21 cs1' > /etc/ssh/ssh_config.d/ssh_modern_IPQoS.conf
+root@my-vps:~# echo 'IPQoS af21 cs1' > /etc/ssh/sshd_config.d/ssh_modern_IPQoS.conf
+root@my-vps:~# service ssh reload
+```
+
 ## Installation des tous les paquets utiles
 
 L'utilitaire `dig` est dans le paquet `bind9-dnsutils`.

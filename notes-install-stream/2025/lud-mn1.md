@@ -4,6 +4,16 @@
 - user : ludolpif, mdp root et user settés (ludolpif n'est pas pas sudoer, mais sudo est installé)
 - Tout par défaut, dans tasksel choisir KDE, utilitaires usuels du système
 
+## Fix bad Debian defaults pour OpenSSH et QoS (DSCP)
+
+```
+root@my-vps:~# echo 'IPQoS af21 cs1' > /etc/ssh/ssh_config.d/ssh_modern_IPQoS.conf
+root@my-vps:~# echo 'IPQoS af21 cs1' > /etc/ssh/sshd_config.d/ssh_modern_IPQoS.conf
+root@my-vps:~# service ssh reload
+```
+
+## Installation des tous les paquets utiles
+
 ```
 root@lud-mn1:~# apt install apparmor-utils blender btop curl obs-studio rustup sloccount strace vlc vim
 ```
