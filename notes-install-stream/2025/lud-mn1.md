@@ -2,14 +2,23 @@
 
 - Install from iso debian-testing weekly 2025-06-08 (debian 13)
 - user : ludolpif, mdp root et user settés (ludolpif n'est pas pas sudoer, mais sudo est installé)
-- Tout par défaut, dans tasksel choisir KDE, utilitaires usuels du système
+- Tout par défaut, dans tasksel choisir KDE, Serveur SSH, utilitaires usuels du système
 
+```
+$ ssh-copy-id ...
+$ ssh root@lud-mn1 # via la clé ssh
+
+root@lud-mn1:~# editor /etc/ssh/sshd_config
+# PasswordAuthentication no
+root@lud-mn1:~# rm /etc/ssh/sshd_config.d/50-cloud-init.conf
+root@lud-mn1:~# service ssh reload
+```
 ## Fix bad Debian defaults pour OpenSSH et QoS (DSCP)
 
 ```
-root@my-vps:~# echo 'IPQoS af21 cs1' > /etc/ssh/ssh_config.d/ssh_modern_IPQoS.conf
-root@my-vps:~# echo 'IPQoS af21 cs1' > /etc/ssh/sshd_config.d/ssh_modern_IPQoS.conf
-root@my-vps:~# service ssh reload
+root@lud-mn1:~# echo 'IPQoS af21 cs1' > /etc/ssh/ssh_config.d/ssh_modern_IPQoS.conf
+root@lud-mn1:~# echo 'IPQoS af21 cs1' > /etc/ssh/sshd_config.d/ssh_modern_IPQoS.conf
+root@lud-mn1:~# service ssh reload
 ```
 
 ## Installation des tous les paquets utiles
