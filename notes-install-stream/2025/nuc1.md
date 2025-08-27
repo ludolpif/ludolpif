@@ -20,8 +20,8 @@ root@nuc1:~# rm -r /home/temp
 ## Fix bad Debian defaults pour OpenSSH et QoS (DSCP)
 
 ```
-root@nuc1:~# echo 'IPQoS af21 cs1' > /etc/ssh/ssh_config.d/ssh_modern_IPQoS.conf
-root@nuc1:~# echo 'IPQoS af21 cs1' > /etc/ssh/sshd_config.d/ssh_modern_IPQoS.conf
+root@nuc1:~# echo 'IPQoS af21 cs0' > /etc/ssh/ssh_config.d/ssh_modern_IPQoS.conf
+root@nuc1:~# echo 'IPQoS af21 cs0' > /etc/ssh/sshd_config.d/ssh_modern_IPQoS.conf
 root@nuc1:~# service ssh reload
 ```
 

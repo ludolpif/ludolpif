@@ -16,8 +16,8 @@ root@lud-mn1:~# service ssh reload
 ## Fix bad Debian defaults pour OpenSSH et QoS (DSCP)
 
 ```
-root@lud-mn1:~# echo 'IPQoS af21 cs1' > /etc/ssh/ssh_config.d/ssh_modern_IPQoS.conf
-root@lud-mn1:~# echo 'IPQoS af21 cs1' > /etc/ssh/sshd_config.d/ssh_modern_IPQoS.conf
+root@lud-mn1:~# echo 'IPQoS af21 cs0' > /etc/ssh/ssh_config.d/ssh_modern_IPQoS.conf
+root@lud-mn1:~# echo 'IPQoS af21 cs0' > /etc/ssh/sshd_config.d/ssh_modern_IPQoS.conf
 root@lud-mn1:~# service ssh reload
 ```
 
