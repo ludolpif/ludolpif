@@ -20,6 +20,7 @@ root@nuc1:~# rm -r /home/temp
 ## Fix bad Debian defaults pour OpenSSH et QoS (DSCP)
 
 ```
+root@lud-5490:~# umask 0077
 root@nuc1:~# echo 'IPQoS af21 cs0' > /etc/ssh/ssh_config.d/ssh_modern_IPQoS.conf
 root@nuc1:~# echo 'IPQoS af21 cs0' > /etc/ssh/sshd_config.d/ssh_modern_IPQoS.conf
 root@nuc1:~# service ssh reload
@@ -106,7 +107,7 @@ root@nuc1:~# adduserbkp --gecos 'Borg Backup lud-5490' --home /mnt/bkp/lud-5490 
 root@nuc1:~# adduserbkp --gecos 'Borg Backup piou' --home /mnt/bkp/piou bbkp-piou
 root@nuc1:~# adduserbkp --gecos 'Borg Backup my-vps' --home /mnt/bkp/my-vps bbkp-vps
 
-root@nuc1:~# dpkg -i /opt/borg-family_0.2-1_all.deb
+root@nuc1:~# dpkg -i /opt/borg-family_0.4-1_all.deb
 root@nuc1:~# apt install -f
 
 root@nuc1:/etc/borg-family# editor envvars
