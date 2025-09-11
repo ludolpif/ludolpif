@@ -74,9 +74,11 @@ root@nuc1:~# editor ~/.bash_aliases
 root@nuc1:~# editor /etc/apt/apt.conf.d/50unattended-upgrades
 Unattended-Upgrade::Mail "root";
 Unattended-Upgrade::Automatic-Reboot "true";
-root@nuc1:~# /etc/apt/apt.conf.d/20auto-upgrades
+
+root@nuc1:~# cat > /etc/apt/apt.conf.d/20auto-upgrades <<"EOT"
 APT::Periodic::Update-Package-Lists "1";
 APT::Periodic::Unattended-Upgrade "1";
+EOT
 
 root@nuc1:~# editor /etc/nftables.conf
 # Configuration basique pour l'instant
