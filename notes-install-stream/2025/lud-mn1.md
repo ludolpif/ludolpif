@@ -153,7 +153,7 @@ root@lud-mn1:~# ss -tuapen
 
 ```
 ludolpif@lud-mn1:~$ cargo install share-clipboard-rs
-# En réalité, pour l'instnat j'ai forké et corrigé 3 bugs, donc install manuelle
+# En réalité, pour l'instant j'ai forké et corrigé 3 bugs, donc install manuelle
 
 ludolpif@lud-mn1:~$ editor .profile
 # set PATH so it includes cargo's bin if it exists
@@ -162,7 +162,43 @@ if [ -d "$HOME/.cargo/bin" ] ; then
 fi
 ```
 
-## TODO
+## Voice-to-text
 
-Désinstaller yaret (servi à numériser 2 CD)
+```
+root@lud-mn1:~# apt install pipx xdotool
 
+ludolpif@lud-mn1:~$ mkdir ~/bin ~/.local/bin
+ludolpif@lud-mn1:~$ cat >> .profile <<"EOT"
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+
+# set PATH so it includes cargo's bin if it exists
+if [ -d "$HOME/.cargo/bin" ] ; then
+    PATH="$HOME/.cargo/bin:$PATH"
+fi
+EOT
+ludolpif@lud-mn1:~$ source .profile
+ludolpif@lud-mn1:~$ echo $PATH
+/home/ludolpif/.cargo/bin:/home/ludolpif/.local/bin:/home/ludolpif/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+
+ludolpif@lud-mn1:~$ pipx install vosk
+ludolpif@lud-mn1:~/Téléchargements$ wget https://alphacephei.com/kaldi/models/vosk-model-small-fr-0.22.zip
+ludolpif@lud-mn1:~/git$ git clone https://github.com/ideasman42/nerd-dictation.git
+
+ludolpif@lud-mn1:~$ cd ~/bin/
+ludolpif@lud-mn1:~/bin$ cp -a ~/git/nerd-dictation/nerd-dictation .
+ludolpif@lud-mn1:~/bin$ sed -i '1s|.*|#!/home/ludolpif/.local/share/pipx/venvs/vosk/bin/python|' nerd-dictation
+ludolpif@lud-mn1:~/bin$ mkdir /home/ludolpif/.config/nerd-dictation
+ludolpif@lud-mn1:~/bin$ cd /home/ludolpif/.config/nerd-dictation
+ludolpif@lud-mn1:~/.config/nerd-dictation$ unzip ~/Téléchargements/vosk-model-small-fr-0.22.zip 
+ludolpif@lud-mn1:~/.config/nerd-dictation$ rm vosk-model-small-fr-0.22.zip 
+ludolpif@lud-mn1:~/.config/nerd-dictation$ ln -s vosk-model-small-fr model
+ludolpif@lud-mn1:~$ nerd-dictation begin --timeout 1.0 --output STDOUT
+```
