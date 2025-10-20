@@ -1,6 +1,6 @@
 ## Installation debian 13
 
-- Install debian 12 depuis Control Panel de l'hébergeur (Debian 13 non dispo dans ses images au 2025-08-05)
+- Install debian 13 depuis Control Panel de l'hébergeur
 
 ```
 $ ssh-copy-id ...
@@ -24,7 +24,7 @@ root@my-vps:~# service ssh reload
 
 L'utilitaire `dig` est dans le paquet `bind9-dnsutils`.
 ```
-root@my-vps:~# apt install bind9-dnsutils iperf3 wireguard
+root@my-vps:~# apt install bind9-dnsutils conntrack iperf3 wireguard
 ```
 
 ## Personnalisation minimale pour moi et pour le stream
@@ -41,6 +41,7 @@ if &diff
 else
 	set mouse=
 endif
+set background=dark
 EOT
 
 
@@ -56,7 +57,7 @@ root@my-vps:~# editor ~/.bash_aliases
 ## Suppression cloud-init
 
 ```
-root@my-vps:~# apt autoremove --purge cloud-init
+root@my-vps:~# apt autoremove --purge cloud-init cloud-initramfs-growroot
 
 # Remarque, le réseau IPv4 et IPv6 est configuré avec netplan, ifupdown n'est pas installé
 
