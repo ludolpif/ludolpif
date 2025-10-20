@@ -13,9 +13,12 @@ root@lud-mn1:~# editor /etc/ssh/sshd_config
 root@lud-mn1:~# rm /etc/ssh/sshd_config.d/50-cloud-init.conf
 root@lud-mn1:~# service ssh reload
 ```
-## Fix bad Debian defaults pour OpenSSH et QoS (DSCP)
+## Fix bad Debian defaults pour umask, OpenSSH et QoS (DSCP)
 
 ```
+root@lud-mn1:~# chfn -o umask=0022 ludolpif
+root@lud-mn1:~# umask 0022
+
 root@lud-mn1:~# echo 'IPQoS af21 cs0' > /etc/ssh/ssh_config.d/ssh_modern_IPQoS.conf
 root@lud-mn1:~# echo 'IPQoS af21 cs0' > /etc/ssh/sshd_config.d/ssh_modern_IPQoS.conf
 root@lud-mn1:~# service ssh reload
